@@ -101,3 +101,25 @@ class ReminderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Reminder.objects.filter(saving_plan__wishlist_item__user=self.request.user)
+
+class WishMatchRecommendationView(generics.ListAPIView):
+    serializer_class = WishlistItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        
+        latest_item = WishlistItem.objects.filter(user=user).order_by('-created_at').first()
+        
+        if not latest_item or not latest_item.category:
+            return WishlistItem.objects.none()
+
+        target_category = latest_item.category
+        
+        recommendations = WishlistItem.objects.filter(
+            category=target_category
+        ).exclude(
+            user=user
+        ).order_by('-created_at')[:10]
+        
+        return recommendations
