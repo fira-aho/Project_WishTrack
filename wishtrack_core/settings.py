@@ -1,11 +1,20 @@
 from pathlib import Path
 from datetime import timedelta
+import environ
+import os
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-8w$tt__3wv67wfkbyx-9(g^^*k_m%46-(4qy7k=!&@w37^-)0^'
-DEBUG = True
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
 ALLOWED_HOSTS = []
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,15 +63,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'wishtrack_core.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wishtrack_db',
-        'USER': 'postgres',
-        'PASSWORD': 'shiro8967',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': env.db('DATABASE_URL')
 }
+DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
