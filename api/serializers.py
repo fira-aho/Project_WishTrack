@@ -5,14 +5,24 @@ from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+        fields = [
+            'id', 
+            'username', 
+            'email', 
+            'first_name', 
+            'last_name',
+            'nick_name',
+            'phone_number',
+            'gender',
+            'language'
+        ]
 
 class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
+        fields = ['username', 'email', 'password', 'password2', 'phone_number']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -28,7 +38,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            phone_number=validated_data.get('phone_number')
         )
         
         user.set_password(validated_data['password'])
