@@ -1,8 +1,8 @@
 from rest_framework import viewsets, permissions, generics, views
 from rest_framework.response import Response
 from django.db.models import Sum
-from .models import User, WishlistItem, Transaction, SavingPlan
-from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer
+from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
+from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -70,3 +70,10 @@ class SavingPlanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return SavingPlan.objects.filter(wishlist_item__user=self.request.user)
+
+class ReminderViewSet(viewsets.ModelViewSet):
+    serializer_class = ReminderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Reminder.objects.filter(saving_plan__wishlist_item__user=self.request.user)

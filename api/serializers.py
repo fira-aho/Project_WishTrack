@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import User, WishlistItem, Transaction, SavingPlan
+from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,4 +66,9 @@ class TransactionSerializer(serializers.ModelSerializer):
 class SavingPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavingPlan
+        fields = '__all__'
+
+class ReminderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reminder
         fields = '__all__'
