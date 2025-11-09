@@ -1,0 +1,1 @@
+web: gunicorn wishtrack_core.wsgi --log-file -
