@@ -1,8 +1,9 @@
-from rest_framework import viewsets, permissions, generics, views
+from rest_framework import viewsets, permissions, generics, views, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Sum
+from django.db.models import Sum, F
 from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
-from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer
+from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer, WishlistProgressSerializer
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -31,6 +32,29 @@ class WishlistItemViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=['post'], url_path='add-progress')
+    def add_progress(self, request, pk=None):
+        wishlist_item = self.get_object()
+        
+        if wishlist_item.user != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+            
+        progress_serializer = WishlistProgressSerializer(data=request.data)
+        if progress_serializer.is_valid():
+            amount_to_add = progress_serializer.validated_data['amount']
+            
+            wishlist_item.amount_saved = F('amount_saved') + amount_to_add
+            wishlist_item.save()
+            wishlist_item.refresh_from_db()
+
+            if wishlist_item.amount_saved >= wishlist_item.price:
+                wishlist_item.status = 'COMPLETED'
+                wishlist_item.save()
+
+            return Response(WishlistItemSerializer(wishlist_item).data)
+        else:
+            return Response(progress_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
