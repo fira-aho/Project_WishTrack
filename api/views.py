@@ -18,10 +18,12 @@ class RegisterView(generics.GenericAPIView):
             "message": "User Created Successfully. Now perform Login to get your token."
         })
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-date_joined')
+class UserDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 class WishlistItemViewSet(viewsets.ModelViewSet):
     serializer_class = WishlistItemSerializer
