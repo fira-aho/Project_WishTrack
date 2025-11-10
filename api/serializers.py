@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from dj_rest_auth.registration.serializers import SocialLoginSerializer
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
+from .models import User, WishlistItem, Transaction, SavingPlan, Reminder, Destination
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -92,3 +92,8 @@ class WishlistProgressSerializer(serializers.Serializer):
 
 class GoogleLoginSerializer(SocialLoginSerializer):
     access_token = serializers.CharField(required=True)
+
+class DestinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Destination
+        fields = '__all__'

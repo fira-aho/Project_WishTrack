@@ -92,3 +92,13 @@ class Reminder(models.Model):
 
     def __str__(self):
         return f"Reminder for {self.saving_plan.wishlist_item.name}"
+
+class Destination(models.Model):
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    duration = models.CharField(max_length=50)
+    image_url = models.URLField(max_length=500, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
+from .models import User, WishlistItem, Transaction, SavingPlan, Reminder, Destination
 
 class UserAdmin(BaseUserAdmin):
     fieldsets = BaseUserAdmin.fieldsets + (
@@ -19,3 +19,4 @@ admin.site.register(WishlistItem)
 admin.site.register(Transaction)
 admin.site.register(SavingPlan)
 admin.site.register(Reminder)
+admin.site.register(Destination)

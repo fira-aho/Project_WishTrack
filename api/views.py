@@ -5,8 +5,8 @@ from django.db.models import Sum, F
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
-from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer, WishlistProgressSerializer, GoogleLoginSerializer
+from .models import User, WishlistItem, Transaction, SavingPlan, Reminder, Destination
+from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer, WishlistProgressSerializer, GoogleLoginSerializer, DestinationSerializer
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -138,3 +138,8 @@ class GoogleLogin(SocialLoginView):
         serializer_class = self.get_serializer_class()
         kwargs['context'] = self.get_serializer_context()
         return serializer_class(*args, **kwargs)
+
+class DestinationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Destination.objects.all()
+    serializer_class = DestinationSerializer
+    permission_classes = [permissions.AllowAny]

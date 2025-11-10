@@ -7,6 +7,7 @@ router.register(r'wishlist-items', views.WishlistItemViewSet, basename='wishlist
 router.register(r'transactions', views.TransactionViewSet, basename='transaction')
 router.register(r'saving-plans', views.SavingPlanViewSet, basename='savingplan')
 router.register(r'reminders', views.ReminderViewSet, basename='reminder')
+router.register(r'destinations', views.DestinationViewSet, basename='destination')
 
 urlpatterns = [
     path('', include(router.urls)),
