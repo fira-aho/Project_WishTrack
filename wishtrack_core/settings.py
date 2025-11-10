@@ -74,7 +74,6 @@ WSGI_APPLICATION = 'wishtrack_core.wsgi.application'
 DATABASES = {
     'default': env.db('DATABASE_URL')
 }
-DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
 
 AUTH_PASSWORD_VALIDATORS = [
