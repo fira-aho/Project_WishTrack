@@ -2,8 +2,11 @@ from rest_framework import viewsets, permissions, generics, views, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Sum, F
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
-from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer, WishlistProgressSerializer
+from .serializers import UserSerializer, WishlistItemSerializer, RegisterSerializer, TransactionSerializer, SavingPlanSerializer, ReminderSerializer, WishlistProgressSerializer, GoogleLoginSerializer
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -125,3 +128,13 @@ class WishMatchRecommendationView(generics.ListAPIView):
         ).order_by('-created_at')[:10]
         
         return recommendations
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    serializer_class = GoogleLoginSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs['context'] = self.get_serializer_context()
+        return serializer_class(*args, **kwargs)

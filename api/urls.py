@@ -14,4 +14,5 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('financial-summary/', views.FinancialSummaryView.as_view(), name='financial_summary'),
     path('wishmatch-recommendations/', views.WishMatchRecommendationView.as_view(), name='wishmatch_recommendations'),
+    path('auth/google/', views.GoogleLogin.as_view(), name='google_login')
 ]

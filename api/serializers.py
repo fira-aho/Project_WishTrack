@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
+from dj_rest_auth.registration.serializers import SocialLoginSerializer
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from .models import User, WishlistItem, Transaction, SavingPlan, Reminder
 
 class UserSerializer(serializers.ModelSerializer):
@@ -86,3 +89,6 @@ class ReminderSerializer(serializers.ModelSerializer):
 
 class WishlistProgressSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+class GoogleLoginSerializer(SocialLoginSerializer):
+    access_token = serializers.CharField(required=True)
